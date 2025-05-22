@@ -50,8 +50,11 @@ func Add(numbers ...int) int {
 }
 
 func Power(n float64, exp int) float64 {
-	if exp == 0 { // Любое число в степени 0 = 1 (даже 0^0)
+	if exp == 0 { // 0^0 = 1 (по соглашению)
 		return 1
+	}
+	if n == 0 {
+		return 0 // 0^5 = 0
 	}
 	if exp < 0 {
 		n = 1 / n
@@ -73,9 +76,9 @@ func Mul(a, b int) int {
 	return a * b
 }
 
-func Div(a, b int) int {
+func Div(a, b int) (int, error) {
 	if b == 0 {
-		return 0
+		return 0, fmt.Errorf("деление на ноль")
 	}
-	return a / b
+	return a / b, nil
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"testing"
 )
 
@@ -129,19 +130,30 @@ func TestMul(t *testing.T) {
 
 func TestDiv(t *testing.T) {
 	tests := []struct {
-		name     string
-		a, b     int
-		expected int
+		name        string
+		a, b        int
+		expected    int
+		expectError bool
 	}{
-		{"Normal", 6, 3, 2},
-		{"Floor", 5, 2, 2},
-		{"ByZero", 5, 0, 0}, // Проверка деления на ноль
+		{"Normal", 6, 3, 2, false},
+		{"Floor", 5, 2, 2, false},
+		{"ByZero", 5, 0, 0, true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Div(tt.a, tt.b); got != tt.expected {
-				t.Errorf("Div(%d, %d) = %d, want %d", tt.a, tt.b, got, tt.expected)
+			result, err := Div(tt.a, tt.b)
+			if tt.expectError {
+				if err == nil {
+					t.Errorf("Div(%d, %d) expected error, got nil", tt.a, tt.b)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Div(%d, %d) unexpected error: %v", tt.a, tt.b, err)
+				}
+				if result != tt.expected {
+					t.Errorf("Div(%d, %d) = %d, want %d", tt.a, tt.b, result, tt.expected)
+				}
 			}
 		})
 	}
@@ -157,5 +169,19 @@ func TestPowerZeroZero(t *testing.T) {
 func TestSum(t *testing.T) {
 	if Add(100, 100) != 200 {
 		t.Error("Ошибка: Sum(100, 100) != 200")
+	}
+}
+
+func TestDivByZero(t *testing.T) {
+	_, err := Div(10, 0)
+	if err == nil {
+		t.Error("Div(10,0) не вернул ошибку")
+	}
+}
+
+func TestPowerZeroNegative(t *testing.T) {
+	result := Power(0, -5)
+	if !math.IsInf(result, 0) { // Должно быть +Inf
+		t.Error("Power(0,-5) != +Inf")
 	}
 }
