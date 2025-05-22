@@ -1,0 +1,37 @@
+# 🚀 30-дневный челлендж: Изучаем Go и ищем работу!
+
+![Go Gopher](https://go.dev/blog/gopher/header.jpg)
+*(Официальный талисман Go — Gopher)*
+
+## 📌 О проекте
+Этот репозиторий содержит материалы и код моего 30-дневного челленджа по изучению языка программирования Go (Golang) с целью трудоустройства. Каждый день я изучаю новые концепции, решаю задачи и делюсь прогрессом.
+
+## 🎯 Цели
+- [ ] Освоить основы Go за 30 дней
+- [ ] Написать несколько проектов для портфолио
+- [ ] Подготовиться к собеседованиям
+- [ ] Найти работу Go-разработчика
+
+## 📅 Программа челленджа
+
+### Неделя 1: Основы Go
+![Basics](https://miro.medium.com/max/1400/1*xVIQ8F2Y1-WUicf6KIIPbQ.png)
+- День 1: Установка Go, Hello World
+- День 2: Переменные, типы данных
+- День 3: Управляющие конструкции
+- День 4: Функции
+- День 5: Пакеты и модули
+- День 6: Структуры
+- День 7: Интерфейсы
+
+### Неделя 2: Продвинутые темы
+- ... (продолжение программы)
+
+## 🛠 Проекты
+В рамках челленджа я планирую создать:
+1. CLI-утилиту для...
+2. Веб-сервер на Go
+3. Микросервис для...
+
+## 📊 Прогресс
+![Progress](https://mermaid.ink/img/pako:eNpVjz0OwjAMha8SeYxOHTp16tSly9MhQ0JISiI7Tgci3p1AC4KWbcnf9z3bJQc4wYVhx1GgQoMGNVq0aNGhQ48eAwYMGDFiwowFK1Zs2LHjwIkTFy7cuHHjQYQnEV7EeBPjQ4wvMX7E-BHjT0xMwiQkTMpkTM4UTMlUTM00TMt0TM8MzMhMzMwsrMpqrM4arMlarM06rMt6rM8GbMhGbMwmVmy1Zmu1Nuu0Luu1PuuzARuyERuziZVYmVXYhE3ZjM3Zgi3Ziq3Zhm3Zju3ZgR3ZiZ3ZhVXZld3YnT3Yk73Ym33Yl_3YnwM4kIM4mEM4lMM4nCM4kqM4mmM4luM4nhM4kZM4mVM4ldM4nTM4k7M4m3M4l_M4nwu4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4mVu4ldu4nTu4k7u4m3u4l_s4nwe4kIu4mEu4lMs4nSu4kqu4mmu4luu4nhu4kZu4
