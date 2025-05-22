@@ -3,19 +3,14 @@ package main
 import "fmt"
 
 func main() {
-
 	str := "Я и есть шторм"
 	fmt.Println(str)
 
-	// Используем возвращаемое значение hello()
 	greeting := hello()
 	fmt.Println("Результат:", greeting)
 
-	// Используем возвращаемые значения Calculator()
 	sum, diff, prod, quot := Calculator()
 	fmt.Printf("Calculator: +=%d, -=%d, *=%d, /=%d\n", sum, diff, prod, quot)
-
-	// ...
 
 	sum = Add(1, 2, 3, 5, 1)
 	fmt.Println("Сумма чисел:", sum)
@@ -36,6 +31,10 @@ func hello() string {
 func Calculator() (int, int, int, int) {
 	num1 := 100
 	num2 := 100
+
+	if num2 == 0 {
+		return 0, 0, 0, 0
+	}
 	return num1 + num2, num1 - num2, num1 * num2, num1 / num2
 }
 
@@ -48,6 +47,11 @@ func Add(numbers ...int) int {
 }
 
 func Power(n float64, exp int) float64 {
+	// Обработка 0^0 (по соглашению равно 1)
+	if n == 0 && exp == 0 {
+		return 1.0
+	}
+
 	if exp == 0 {
 		return 1.0
 	}
@@ -66,4 +70,20 @@ func Power(n float64, exp int) float64 {
 		return 1 / result
 	}
 	return result
+}
+
+// Новые функции для тестирования
+func Sub(a, b int) int {
+	return a - b
+}
+
+func Mul(a, b int) int {
+	return a * b
+}
+
+func Div(a, b int) int {
+	if b == 0 {
+		return 0
+	}
+	return a / b
 }
