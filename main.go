@@ -7,24 +7,23 @@ func main() {
 	str := "Я и есть шторм"
 	fmt.Println(str)
 
-	hello()
+	Hello()
 	Calculator()
 
-	sum := add(1, 2, 3, 5, 1)
+	sum := Add(1, 2, 3, 5, 1)
 	fmt.Println("Сумма чисел:", sum)
 
 	powerResult := Power(1.3, 2)
 	fmt.Println("1.3^2 =", powerResult)
 }
 
-func hello() {
+func Hello() string {
 	num1 := 10
 	num2 := 20
 	if num1 < num2 {
-		fmt.Println(num1, "<", num2)
-	} else if num1 == num2 {
-		fmt.Println("Числа равны")
+		return "Правильно"
 	}
+	return ""
 }
 
 func Calculator() {
@@ -37,7 +36,7 @@ func Calculator() {
 	fmt.Println("Результаты:", sum, sum1, sum2, sum3)
 }
 
-func add(numbers ...int) int {
+func Add(numbers ...int) int {
 	sum := 0
 	for _, num := range numbers {
 		sum += num
@@ -46,13 +45,22 @@ func add(numbers ...int) int {
 }
 
 func Power(n float64, exp int) float64 {
-	if exp < 0 {
-		n = 1 / n
-		exp = -exp
+	if exp == 0 {
+		return 1.0
 	}
+
 	result := 1.0
-	for i := 0; i < exp; i++ {
+	absExp := exp
+	if exp < 0 {
+		absExp = -exp
+	}
+
+	for i := 0; i < absExp; i++ {
 		result *= n
+	}
+
+	if exp < 0 {
+		return 1 / result
 	}
 	return result
 }

@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func Main() { // Исправлено на Main()
 	var a = add1(4, 5)  // 9
 	var b = add1(20, 6) // 26
 	fmt.Println(a)

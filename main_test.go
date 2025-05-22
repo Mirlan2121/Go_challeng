@@ -19,7 +19,7 @@ func TestAdd(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := Add(tt.numbers)
+			result := Add(tt.numbers...)
 			if result != tt.expected {
 				t.Errorf("Add(%v) = %d, expected %d", tt.numbers, result, tt.expected)
 			}
@@ -30,22 +30,22 @@ func TestAdd(t *testing.T) {
 func TestPower(t *testing.T) {
 	tests := []struct {
 		name     string
-		n        int
+		n        float64 // Изменено на float64
 		power    int
-		expected int
+		expected float64 // Изменено на float64
 	}{
-		{"Positive exponent", 2, 3, 8},
-		{"Zero exponent", 5, 0, 1},                    // крайний случай: степень 0
-		{"Negative exponent (unsupported)", 2, -3, 1}, // (в текущей реализации не поддерживается)
-		{"Zero base", 0, 5, 0},
-		{"One to any power", 1, 100, 1},
+		{"Positive exponent", 2.0, 3, 8.0},
+		{"Zero exponent", 5.0, 0, 1.0},
+		{"Negative exponent", 2.0, -3, 0.125}, // Теперь поддерживается
+		{"Zero base", 0.0, 5, 0.0},
+		{"One to any power", 1.0, 100, 1.0},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := Power(tt.n, tt.power)
 			if result != tt.expected {
-				t.Errorf("Power(%d, %d) = %d, expected %d", tt.n, tt.power, result, tt.expected)
+				t.Errorf("Power(%v, %d) = %v, expected %v", tt.n, tt.power, result, tt.expected)
 			}
 		})
 	}
