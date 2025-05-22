@@ -49,26 +49,48 @@ func TestPower(t *testing.T) {
 			}
 		})
 	}
-
-	// Проверка положительной степени
-	result := Power(2.0, 3)
-	if result != 8.0 {
-		t.Errorf("Ошибка: Power(2,3) = %f, ожидалось 8.0", result)
-	}
-
-	// Проверка отрицательной степени
-	result = Power(2.0, -3)
-	if result != 0.125 {
-		t.Errorf("Ошибка: Power(2,-3) = %f, ожидалось 0.125", result)
-	}
-
-	// Проверка степени 0
-	result = Power(2.0, 0)
-	if result != 1.0 {
-		t.Errorf("Ошибка: Power(2,0) = %f, ожидалось 1.0", result)
-	}
 }
 
 func TestHandler(t *testing.T) {
 	// Можно добавить HTTP-тесты с помощью httptest, но это выходит за рамки примера
+}
+
+// main_test.go
+func TestHello(t *testing.T) {
+	tests := []struct {
+		name     string
+		expected string
+	}{
+		{"Default case", "Правильно"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := hello(); got != tt.expected {
+				t.Errorf("hello() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestCalculator(t *testing.T) {
+	sum, sub, mul, div := Calculator()
+	if sum != 200 || sub != 0 || mul != 10000 || div != 1 {
+		t.Errorf("Calculator() = %d, %d, %d, %d, ожидалось 200, 0, 10000, 1",
+			sum, sub, mul, div)
+	}
+}
+
+func TestAddEmpty(t *testing.T) {
+	result := Add() // Пустой список
+	if result != 0 {
+		t.Errorf("add() = %d, ожидалось 0", result)
+	}
+}
+
+func TestPowerZeroBase(t *testing.T) {
+	result := Power(0, 5)
+	if result != 0 {
+		t.Errorf("Power(0,5) = %f, ожидалось 0", result)
+	}
 }
