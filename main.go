@@ -39,6 +39,9 @@ func Calculator() (int, int, int, int) {
 }
 
 func Add(numbers ...int) int {
+	if len(numbers) == 0 { // Если чисел нет — возвращай 0
+		return 0
+	}
 	sum := 0
 	for _, num := range numbers {
 		sum += num
@@ -47,27 +50,16 @@ func Add(numbers ...int) int {
 }
 
 func Power(n float64, exp int) float64 {
-	// Обработка 0^0 (по соглашению равно 1)
-	if n == 0 && exp == 0 {
-		return 1.0
+	if exp == 0 { // Любое число в степени 0 = 1 (даже 0^0)
+		return 1
 	}
-
-	if exp == 0 {
-		return 1.0
+	if exp < 0 {
+		n = 1 / n
+		exp = -exp
 	}
-
 	result := 1.0
-	absExp := exp
-	if exp < 0 {
-		absExp = -exp
-	}
-
-	for i := 0; i < absExp; i++ {
+	for i := 0; i < exp; i++ {
 		result *= n
-	}
-
-	if exp < 0 {
-		return 1 / result
 	}
 	return result
 }
