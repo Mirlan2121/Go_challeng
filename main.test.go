@@ -49,6 +49,24 @@ func TestPower(t *testing.T) {
 			}
 		})
 	}
+
+	// Проверка положительной степени
+	result := Power(2.0, 3)
+	if result != 8.0 {
+		t.Errorf("Ошибка: Power(2,3) = %f, ожидалось 8.0", result)
+	}
+
+	// Проверка отрицательной степени
+	result = Power(2.0, -3)
+	if result != 0.125 {
+		t.Errorf("Ошибка: Power(2,-3) = %f, ожидалось 0.125", result)
+	}
+
+	// Проверка степени 0
+	result = Power(2.0, 0)
+	if result != 1.0 {
+		t.Errorf("Ошибка: Power(2,0) = %f, ожидалось 1.0", result)
+	}
 }
 
 func TestHandler(t *testing.T) {
