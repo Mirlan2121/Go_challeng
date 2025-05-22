@@ -176,12 +176,16 @@ func TestDivByZero(t *testing.T) {
 	_, err := Div(10, 0)
 	if err == nil {
 		t.Error("Div(10,0) не вернул ошибку")
+	} else {
+		t.Logf("Div(10,0) вернул ошибку: %v (это правильно)", err) // Логируем
 	}
 }
 
 func TestPowerZeroNegative(t *testing.T) {
 	result := Power(0, -5)
-	if !math.IsInf(result, 0) { // Должно быть +Inf
-		t.Error("Power(0,-5) != +Inf")
+	if !math.IsInf(result, 1) { // Проверяем +Inf
+		t.Errorf("Power(0,-5) = %v, ожидалось +Inf", result)
+	} else {
+		t.Log("Power(0,-5) корректно вернул +Inf") // Логируем успех
 	}
 }
