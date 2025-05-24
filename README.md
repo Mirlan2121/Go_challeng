@@ -15,7 +15,6 @@
 
 ## 🧩 Базовые функции
 
-```go
 // Простая функция
 func greet(name string) string {
     return "Hello, " + name
@@ -26,7 +25,7 @@ func version() string {
     return "1.0.0"
 }
 
-🔄 Функции с несколькими возвращаемыми значениями
+## 🔄 Функции с несколькими возвращаемыми значениями
 
 // Возврат нескольких значений
 func divide(a, b float64) (float64, error) {
@@ -43,7 +42,7 @@ func calc(a, b int) (sum int, diff int) {
     return
 }
 
-🎭 Анонимные функции
+## 🎭 Анонимные функции
 func main() {
     // Анонимная функция
     func(msg string) {
@@ -51,7 +50,7 @@ func main() {
     }("Hello from anonymous function!")
 }
 
-🔗 Замыкания
+## 🔗 Замыкания
 func counter() func() int {
     i := 0
     return func() int {
@@ -66,7 +65,7 @@ func main() {
     fmt.Println(c()) // 2
 }
 
-📤 Функции как параметры
+## 📤 Функции как параметры
 func apply(numbers []int, op func(int) int) []int {
     result := make([]int, len(numbers))
     for i, v := range numbers {
@@ -85,7 +84,7 @@ func main() {
     fmt.Println(squared) // [1 4 9]
 }
 
-🏗 Методы
+## 🏗 Методы
 type Rectangle struct {
     Width, Height float64
 }
