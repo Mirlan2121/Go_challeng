@@ -2,80 +2,53 @@ package main
 
 import "fmt"
 
-type mile uint
-type kilometer uint
-type BinaryOp func(int, int) int
-
-func action1(n1 int, n2 int, op BinaryOp) {
-	result := op(n1, n2)
-	fmt.Println(result)
-}
-
-func add1(x int, y int) int {
-	return x + y
-}
-
-/*
-   В данном случае определяется именованный тип mile, который основывается на типе uint. По сути mile представляет тип uint и
-   работа с ним будет производиться также, как и с типом uint. Однако в то же время фактически это новый тип.
-*/
-
-func distanceToEnemy(distance mile) {
-	fmt.Println("расстояние для противника:")
-	fmt.Println(distance, "миль")
+// Сама структура персон
+type person struct {
+	name string // Поля имени
+	age  int    // Поля возроста
 
 }
-func action(n1 int, n2 int, op func(int, int) int) {
-	result := op(n1, n2)
-	fmt.Println(result)
+
+// Условия проверять на Имя
+func addName(p person) string {
+
+	name := "Miki"
+	if name == p.name {
+		fmt.Println("Имя соответствует")
+	} else {
+		fmt.Println("Нет такой именни")
+	}
+
+	return name
 }
 
-func add(x int, y int) int {
-	return x + y
+// Условия проверять на Возрост
+func addAge(p person) {
+
+	age := 14
+
+	if age >= p.age {
+		fmt.Println("Возрост соответствует")
+	} else {
+		fmt.Println("Возрост не соответствует")
+	}
+
 }
 
 func main() {
-	// Мы можем определять переменные данного типа, работать с ними как с объектами базового типа uint:
 
-	var distance mile = 5
-	fmt.Println(distance)
-	distance += 5
-	fmt.Println(distance)
-	fmt.Println()
+	var tom person = person{name: "Miki", age: 23}
+	fmt.Println(tom.name) // Miki
+	fmt.Println(tom.age)  // 23
 	fmt.Println()
 
-	/*
-	   Но может возникнуть вопрос, а зачем это нужно, зачем определять именнованный тип, если он все равно ведет себя как
-	   тип uint? Рассмотрим следующую ситуацию:
-	*/
-
-	var distance1 mile = 5
-	distanceToEnemy(distance1)
+	tom.age = 24                   // Изменения значения
+	fmt.Println(tom.name, tom.age) // Miki, 24
 	fmt.Println()
 
-	// var distance1 uint = 5
-	// distanceToEnemy(distance1)   // !Ошибка
+	var name person = person{name: "Alex", age: 15}
+	fmt.Println(name)
 
-	// var distance2 kilometer = 5
-	// distanceToEnemy(distance2)   // ! ошибка
-
-	/*
-		Здесь определена функция action, которая принимает два числа и некоторую другую функцию с типом func(int, int) int -
-		то есть функцию, которая принимает два числа и также возвращает число. В функции main определяется переменная myOperation,
-		которая как раз представляет функцию типа func(int, int) int, получает ссылку на функцию add и передается в вызов
-		action(10, 25, myOperation)
-	*/
-
-	/*
-	Теперь тип функции func(int, int) int проецируется на именнованный тип BinaryOp, который представляет бинарную операцию над двумя операндами:
-
-
-	*/
-	var myOperation func(int, int) int = add
-	action(10, 25, myOperation)
-	fmt.Println()
-	fmt.Println()
-
-	var myOperation1 BinaryOp = add1
-	action1(10, 35, myOperation1)
+	addName(name)
+	addAge(name)
 }
