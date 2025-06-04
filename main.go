@@ -2,57 +2,80 @@ package main
 
 import "fmt"
 
-// Указатели и функции
+type mile uint
+type kilometer uint
+type BinaryOp func(int, int) int
 
-func changeValue(x int) {
-	x = x * x
+func action1(n1 int, n2 int, op BinaryOp) {
+	result := op(n1, n2)
+	fmt.Println(result)
 }
 
-// Указатели как параметры функции
-func changeValue2(x *int) {
-	*x = (*x) * (*x)
+func add1(x int, y int) int {
+	return x + y
 }
 
-// Указатель как результат функции
-func createPointer(x int) *int {
-	p := new(int)
-	*p = x
-	return p
+/*
+   В данном случае определяется именованный тип mile, который основывается на типе uint. По сути mile представляет тип uint и
+   работа с ним будет производиться также, как и с типом uint. Однако в то же время фактически это новый тип.
+*/
+
+func distanceToEnemy(distance mile) {
+	fmt.Println("расстояние для противника:")
+	fmt.Println(distance, "миль")
+
+}
+func action(n1 int, n2 int, op func(int, int) int) {
+	result := op(n1, n2)
+	fmt.Println(result)
+}
+
+func add(x int, y int) int {
+	return x + y
 }
 
 func main() {
+	// Мы можем определять переменные данного типа, работать с ними как с объектами базового типа uint:
 
-	fmt.Println("Первый вариант кода без указателей")
-	d := 5
-	fmt.Println("d before: ", d) // 5
-	changeValue(d)               // Изменением значение
-	fmt.Println("d after: ", d)  // 5 - значение неизменилось
+	var distance mile = 5
+	fmt.Println(distance)
+	distance += 5
+	fmt.Println(distance)
 	fmt.Println()
 	fmt.Println()
 
 	/*
-			Функция changeValue изменяет значение параметра, возводя его в квадрат. Но после вызова этой функции мы видим, что значение
-			переменной d, которая передается в changeValue, не изменилось. Ведь	функция получает копию данной переменной и
-		    работает с ней независимо от оригинальной переменной d. Поэтому d никак не изменяется.
-	*/
-	fmt.Println("Второй вариант кода с указателим")
-	d2 := 5
-	fmt.Println("d before:", d2) // 5
-	changeValue2(&d2)            // изменяем значение
-	fmt.Println("d after:", d2)  // 25 - значение изменилось!
-	fmt.Println()
-	fmt.Println()
-	/*
-	   Теперь функция changeValue принимает в качестве параметра указатель на объект типа int. При вызове функции changeValue в нее
-	   передается адрес переменной d (changeValue(&d)). И после ее выполнения мы видим, что значение переменной d изменилось.
+	   Но может возникнуть вопрос, а зачем это нужно, зачем определять именнованный тип, если он все равно ведет себя как
+	   тип uint? Рассмотрим следующую ситуацию:
 	*/
 
-	// В данном случае функция createPointer возвращает указатель на объект int.
-	fmt.Println("В данном случае функция createPointer возвращает указатель на объект int.")
-	p1 := createPointer(7)
-	fmt.Println("p1:", *p1) // p1: 7
-	p2 := createPointer(10)
-	fmt.Println("p2:", *p2) // p2: 10
-	p3 := createPointer(28)
-	fmt.Println("p3:", *p3) // p3: 28
+	var distance1 mile = 5
+	distanceToEnemy(distance1)
+	fmt.Println()
+
+	// var distance1 uint = 5
+	// distanceToEnemy(distance1)   // !Ошибка
+
+	// var distance2 kilometer = 5
+	// distanceToEnemy(distance2)   // ! ошибка
+
+	/*
+		Здесь определена функция action, которая принимает два числа и некоторую другую функцию с типом func(int, int) int -
+		то есть функцию, которая принимает два числа и также возвращает число. В функции main определяется переменная myOperation,
+		которая как раз представляет функцию типа func(int, int) int, получает ссылку на функцию add и передается в вызов
+		action(10, 25, myOperation)
+	*/
+
+	/*
+	Теперь тип функции func(int, int) int проецируется на именнованный тип BinaryOp, который представляет бинарную операцию над двумя операндами:
+
+
+	*/
+	var myOperation func(int, int) int = add
+	action(10, 25, myOperation)
+	fmt.Println()
+	fmt.Println()
+
+	var myOperation1 BinaryOp = add1
+	action1(10, 35, myOperation1)
 }
