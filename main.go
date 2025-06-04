@@ -9,46 +9,26 @@ type person struct {
 
 }
 
-// Условия проверять на Имя
-func addName(p person) string {
-
-	name := "Miki"
-	if name == p.name {
-		fmt.Println("Имя соответствует")
-	} else {
-		fmt.Println("Нет такой именни")
-	}
-
-	return name
-}
-
-// Условия проверять на Возрост
-func addAge(p person) {
-
-	age := 14
-
-	if age >= p.age {
-		fmt.Println("Возрост соответствует")
-	} else {
-		fmt.Println("Возрост не соответствует")
-	}
-
-}
-
 func main() {
 
-	var tom person = person{name: "Miki", age: 23}
-	fmt.Println(tom.name) // Miki
-	fmt.Println(tom.age)  // 23
+	// Первый вариант заполнения
+	tom := person{name: "Tom", age: 22}
+	var tomPointer *person = &tom
+
+	// Второй вариант заполнения
+	var tom1 *person = &person{name: "Tom", age: 24}
+	var bob *person = new(person)
+	bob.name = "Bob"
+	bob.age = 34
+
+	fmt.Println(tom1.name, tom1.age)
+	fmt.Println(bob.name, bob.age)
+
+	tomPointer.age = 29
+	fmt.Println(tom.age)
 	fmt.Println()
 
-	tom.age = 24                   // Изменения значения
-	fmt.Println(tom.name, tom.age) // Miki, 24
+	(*tomPointer).age = 32
+	fmt.Println(tom.age)
 	fmt.Println()
-
-	var name person = person{name: "Alex", age: 15}
-	fmt.Println(name)
-
-	addName(name)
-	addAge(name)
 }
