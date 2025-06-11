@@ -1,13 +1,14 @@
 package main
 
+// Импорт пакетов
 import (
 	"fmt"
 
-	"./computation"
+	"rsc.io/quote"
 )
 
 func main() {
-
-	fmt.Println(computation.Factorial(5))
-	fmt.Println(computation.Factorial(4))
+	// Вызов модуля quote и его функции Hello
+	message := quote.Hello()
+	fmt.Println(message)
 }
