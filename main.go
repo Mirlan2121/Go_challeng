@@ -1,14 +1,33 @@
 package main
 
-// Импорт пакетов
-import (
-	"fmt"
+import "fmt"
 
-	"rsc.io/quote"
-)
+// Интерфейс
+type Vehicle interface {
+	move()
+}
+
+// Функция движения транспорта
+func drive(vehicle Vehicle) {
+	vehicle.move()
+}
+
+// Структура машины и самолета
+type Car struct{}
+type Aircraft struct{}
+
+// Функции движения транспорта
+func (c Car) move() {
+	fmt.Println("Автомобиль едет")
+}
+func (a Aircraft) move() {
+	fmt.Println("Самолет летит")
+}
 
 func main() {
-	// Вызов модуля quote и его функции Hello
-	message := quote.Hello()
-	fmt.Println(message)
+	tesla := Car{}
+	boing := Aircraft{}
+	drive(tesla)
+	drive(boing)
+
 }
