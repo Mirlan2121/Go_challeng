@@ -2,28 +2,34 @@ package main
 
 import "fmt"
 
-type Vehicle interface {
-	move()
-}
-
-type Car struct{ model string }
-type Aircraft struct{ model string }
-
-func (c Car) move() {
-	fmt.Println(c.model, "едет")
-}
-func (a Aircraft) move() {
-	fmt.Println(a.model, "летит")
-}
-
 func main() {
 
-	tesla := Car{"Tesla"}
-	volvo := Car{"Volvo"}
-	boeing := Aircraft{"Boeing"}
-
-	vehicles := [...]Vehicle{tesla, volvo, boeing}
-	for _, vehicle := range vehicles {
-		vehicle.move()
+	for i := 1; i < 7; i++ {
+		go factorial(i)
 	}
+	fmt.Scanln()
+	fmt.Println("The End")
+
+	for i := 1; i < 7; i++ {
+
+		go func(n int) {
+			result := 1
+			for j := 1; j <= n; j++ {
+				result *= j
+			}
+			fmt.Println(n, "-", result)
+		}(i)
+	}
+}
+
+func factorial(n int) {
+	if n < 1 {
+		fmt.Println("Invalid input number")
+		return
+	}
+	result := 1
+	for i := 1; i <= n; i++ {
+		result *= i
+	}
+	fmt.Println(n, "-", result)
 }
