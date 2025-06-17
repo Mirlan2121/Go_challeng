@@ -4,18 +4,20 @@ import "fmt"
 
 func main() {
 
-	intCh := make(chan int)
-
-	go square(intCh)                   // square ожидает получения через канал
-	intCh <- 4                         // отправляем в канал число
-	fmt.Println("result := ", <-intCh) // получаем из канала результат
+	intCh := make(chan int, 2)
+	go factorial(5, intCh)
+	fmt.Println(<-intCh)
 	fmt.Println("The End")
 }
 
-// функция возведения в квадрат
-func square(ch chan int) {
+func factorial(n int, ch chan<- int) {
 
-	num := <-ch // получаем из канала число
-	fmt.Println("num := ", num)
-	ch <- num * num // обратно отправляем квадрат числа
+	result := 1
+	for i := 1; i <= n; i++ {
+		result *= i
+	}
+	ch <- result
 }
+
+// Здесь второй параметр функции factorial определен как канал, доступный только для отправки данных: ch chan<- int.
+// Соответственно внутри функции factorial мы можем только отправлять данные в канал, но не получать их.
