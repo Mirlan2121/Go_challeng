@@ -3,21 +3,15 @@ package main
 import "fmt"
 
 func main() {
-
-	intCh := make(chan int, 2)
-	go factorial(5, intCh)
-	fmt.Println(<-intCh)
-	fmt.Println("The End")
+	fmt.Println("Start")
+	// создание канала и получение из него данных
+	fmt.Println(<-createChan(5)) // 5
+	fmt.Println("End")
 }
-
-func factorial(n int, ch chan<- int) {
-
-	result := 1
-	for i := 1; i <= n; i++ {
-		result *= i
-	}
-	ch <- result
+func createChan(n int) chan int {
+	ch := make(chan int) // создаем канал
+	go func() {
+		ch <- n // отправляем данные в канал
+	}() // запускаем горутину
+	return ch // возвращаем канал
 }
-
-// Здесь второй параметр функции factorial определен как канал, доступный только для отправки данных: ch chan<- int.
-// Соответственно внутри функции factorial мы можем только отправлять данные в канал, но не получать их.
