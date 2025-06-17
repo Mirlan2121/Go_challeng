@@ -4,32 +4,18 @@ import "fmt"
 
 func main() {
 
-	for i := 1; i < 7; i++ {
-		go factorial(i)
-	}
-	fmt.Scanln()
+	intCh := make(chan int)
+
+	go square(intCh)                   // square ожидает получения через канал
+	intCh <- 4                         // отправляем в канал число
+	fmt.Println("result := ", <-intCh) // получаем из канала результат
 	fmt.Println("The End")
-
-	for i := 1; i < 7; i++ {
-
-		go func(n int) {
-			result := 1
-			for j := 1; j <= n; j++ {
-				result *= j
-			}
-			fmt.Println(n, "-", result)
-		}(i)
-	}
 }
 
-func factorial(n int) {
-	if n < 1 {
-		fmt.Println("Invalid input number")
-		return
-	}
-	result := 1
-	for i := 1; i <= n; i++ {
-		result *= i
-	}
-	fmt.Println(n, "-", result)
+// функция возведения в квадрат
+func square(ch chan int) {
+
+	num := <-ch // получаем из канала число
+	fmt.Println("num := ", num)
+	ch <- num * num // обратно отправляем квадрат числа
 }
