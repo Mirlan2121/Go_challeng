@@ -1,26 +1,37 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+	"time"
+)
 
-func main() {
-	intCh := make(chan int)
+var counter int = 0 //  общий ресурс
+var wg sync.WaitGroup
 
-	go factorial(7, intCh)
+func work(number int) {
+	counter = 0 // сбрасываем общий ресурс
 
-	for {
-		num, opened := <-intCh // получаем данные из потока
-		if !opened {
-			break // если поток закрыт, выход из цикла
-		}
-		fmt.Println(num)
+	for k := 1; k <= 5; k++ {
+		counter += 1                       // изменяем общий ресурс
+		time.Sleep(100 * time.Millisecond) // задержка для наглядности
+		fmt.Println("Goroutine", number, "-", counter)
 	}
+	wg.Done() // сигнализируем, что горутина завершила работу
 }
 
-func factorial(n int, ch chan int) {
-	defer close(ch)
-	result := 1
-	for i := 1; i <= n; i++ {
-		result *= i
-		ch <- result // посылаем по числу
+func main() {
+
+	goroutines_count := 4 // количество запускаемых горутин
+
+	wg.Add(goroutines_count)
+
+	// запускаем горутины
+	for i := 1; i <= goroutines_count; i++ {
+		go work(i)
 	}
+	// ожидаем завершения всех горутин
+	wg.Wait()
+
+	fmt.Println("The End")
 }
