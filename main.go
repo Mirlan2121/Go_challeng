@@ -3,24 +3,24 @@ package main
 import "fmt"
 
 func main() {
+	intCh := make(chan int)
 
-	results := make(map[int]int)
-	structCh := make(chan struct{})
+	go factorial(7, intCh)
 
-	go factorial(5, structCh, results)
-
-	<-structCh // ожидаем закрытия канала structCh
-
-	for i, v := range results {
-		fmt.Println(i, " - ", v)
+	for {
+		num, opened := <-intCh // получаем данные из потока
+		if !opened {
+			break // если поток закрыт, выход из цикла
+		}
+		fmt.Println(num)
 	}
 }
 
-func factorial(n int, ch chan struct{}, results map[int]int) {
-	defer close(ch) // закрываем канал после завершения горутины
+func factorial(n int, ch chan int) {
+	defer close(ch)
 	result := 1
 	for i := 1; i <= n; i++ {
 		result *= i
-		results[i] = result
+		ch <- result // посылаем по числу
 	}
 }
