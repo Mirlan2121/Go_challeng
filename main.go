@@ -3,43 +3,61 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
 )
 
-var counter int = 0 //  общий ресурс
+type Map_struct struct {
+	values map[int]int
+	sync.RWMutex
+}
+
 var wg sync.WaitGroup
 
-func work(number int, mutex *sync.Mutex) {
+// изменение данных
+func (map_data *Map_struct) update_map(keyval int) {
 
-	mutex.Lock() // блокируем доступ к переменной counter
+	map_data.Lock() // блокировка на запись
 
-	counter = 0 // сбрасываем общий ресурс
+	map_data.values[keyval] = keyval * 10 // изменяем общий ресурс
 
-	for k := 1; k <= 5; k++ {
-		counter += 1 // изменяем общий ресурс
-		time.Sleep(100 * time.Millisecond)
-		fmt.Println("Goroutine", number, "-", counter)
-	}
+	map_data.Unlock() // сбрасываем блокировку на запись
 
-	mutex.Unlock() // деблокируем доступ
+	wg.Done() // уведомляем, что горутина завершена
+}
 
-	wg.Done() // сигнализируем, что горутина завершила работу
+// чтение данных
+func (map_data *Map_struct) read_map() {
+
+	map_data.RLock() // устанавливаем блокировку на чтение
+
+	val := map_data.values // считываем данные
+
+	map_data.RUnlock() // сбрасываем блокировку на чтение
+
+	fmt.Println(val)
+	wg.Done() // уведомляем, что горутина завершена
 }
 
 func main() {
 
-	var mutex sync.Mutex // определяем мьютекс
+	my_map := Map_struct{values: make(map[int]int)}
 
-	goroutines_count := 4 // количество запускаемых горутин
+	wg.Add(2 * 5) // по пять горутин update_map и read_map
 
-	wg.Add(goroutines_count)
+	for n := 1; n <= 5; n++ {
 
-	// запускаем горутины
-	for i := 1; i <= goroutines_count; i++ {
-		go work(i, &mutex)
+		go my_map.update_map(n)
+
+		go my_map.read_map()
+
 	}
-	// ожидаем завершения всех горутин
-	wg.Wait()
-
-	fmt.Println("The End")
+	wg.Wait() // ждем завершения всех горутин
 }
+
+// RLock(): используется для получения блокировки на чтение. Несколько читателей могут получить эту блокировку в одной программе. Блокировка на чтение не привязан к определенному потоку.
+
+// Unlock(): освобождает полученную одну блокировку на чтение.
+
+// Lock(): блокирует мьютекс для записи. Доступен только для одного потока за раз. Если другой поток получает блокировку для целей чтения/записи, Lock блокируется до тех пор, пока
+// блокировка не станет доступной для получения.
+
+// Unlock(): снимает блокировку на запись. При выполнении Unlock без получения блокировки мы получим ошибку во время выполнения.
