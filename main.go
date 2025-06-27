@@ -1,74 +1,63 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
-// Структура контакт
-type contanct struct {
-	email string
-	phone string
+type Map_struct struct {
+	values map[int]int
+	sync.RWMutex
 }
 
-// Сама структура персон
-type person struct {
-	name string // Поля имени
-	age  int    // Поля возроста
-	contanct
+var wg sync.WaitGroup
+
+// изменение данных
+func (map_data *Map_struct) update_map(keyval int) {
+
+	map_data.Lock() // блокировка на запись
+
+	map_data.values[keyval] = keyval * 10 // изменяем общий ресурс
+
+	map_data.Unlock() // сбрасываем блокировку на запись
+
+	wg.Done() // уведомляем, что горутина завершена
 }
 
-// Хранения ссылки на структуру того же типа
-type node struct {
-	value int
-	next  *node
+// чтение данных
+func (map_data *Map_struct) read_map() {
+
+	map_data.RLock() // устанавливаем блокировку на чтение
+
+	val := map_data.values // считываем данные
+
+	map_data.RUnlock() // сбрасываем блокировку на чтение
+
+	fmt.Println(val)
+	wg.Done() // уведомляем, что горутина завершена
 }
 
-func printNodeValue(n *node) {
-	fmt.Println(n.value)
-	if n.next != nil {
-		printNodeValue(n.next)
-	}
-}
-
-// Вложенные структуры
 func main() {
 
-	var tom = person{
-		name: "Tom",
-		age:  24,
-		contanct: contanct{
-			email: "tom@gmail.com",
-			phone: "+1234567899",
-		},
+	my_map := Map_struct{values: make(map[int]int)}
+
+	wg.Add(2 * 5) // по пять горутин update_map и read_map
+
+	for n := 1; n <= 5; n++ {
+
+		go my_map.update_map(n)
+
+		go my_map.read_map()
+
 	}
-	tom.email = "supertom@gmail.com"
-
-	fmt.Println(tom.email) // supertom@gmail.com
-	fmt.Println(tom.phone) // +1234567899
-	fmt.Println()
-	// В данном случае структура person имеет поле contactInfo, которое представляет другую структуру contact.
-
-	/*
-		Поле contact в структуре person фактические эквивалентно свойству contact contact, то есть свойство называется contact и
-		представляет тип contact. Это позволяет нам сократить путь к полям вложенной структуры. Например, мы можем написать
-		tom.email, а не tom.contact.email. Хотя можно использовать и второй вариант.
-	*/
-	////////////////////////////////
-
-	first := node{value: 4}
-	second := node{value: 5}
-	third := node{value: 6}
-
-	first.next = &second
-	second.next = &third
-
-	var current *node = &first
-	for current != nil {
-		fmt.Println(current.value)
-		current = current.next
-	}
-	/*
-		Здесь определена структура node, которая представляет типичный узел односвязного списка. Она хранит значение в поле value
-		и ссылку на следующий узел через указатель next.
-		В функции main создаются три связанных структуры, и с помощью цикла for и вспомогательного указателя current выводятся их
-		значения.
-	*/
+	wg.Wait() // ждем завершения всех горутин
 }
+
+// RLock(): используется для получения блокировки на чтение. Несколько читателей могут получить эту блокировку в одной программе. Блокировка на чтение не привязан к определенному потоку.
+
+// Unlock(): освобождает полученную одну блокировку на чтение.
+
+// Lock(): блокирует мьютекс для записи. Доступен только для одного потока за раз. Если другой поток получает блокировку для целей чтения/записи, Lock блокируется до тех пор, пока
+// блокировка не станет доступной для получения.
+
+// Unlock(): снимает блокировку на запись. При выполнении Unlock без получения блокировки мы получим ошибку во время выполнения.
