@@ -1,74 +1,45 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+	"time"
+)
 
-// Структура контакт
-type contanct struct {
-	email string
-	phone string
-}
+var counter int = 0 //  общий ресурс
+var wg sync.WaitGroup
 
-// Сама структура персон
-type person struct {
-	name string // Поля имени
-	age  int    // Поля возроста
-	contanct
-}
+func work(number int, mutex *sync.Mutex) {
 
-// Хранения ссылки на структуру того же типа
-type node struct {
-	value int
-	next  *node
-}
+	mutex.Lock() // блокируем доступ к переменной counter
 
-func printNodeValue(n *node) {
-	fmt.Println(n.value)
-	if n.next != nil {
-		printNodeValue(n.next)
+	counter = 0 // сбрасываем общий ресурс
+
+	for k := 1; k <= 5; k++ {
+		counter += 1 // изменяем общий ресурс
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println("Goroutine", number, "-", counter)
 	}
+
+	mutex.Unlock() // деблокируем доступ
+
+	wg.Done() // сигнализируем, что горутина завершила работу
 }
 
-// Вложенные структуры
 func main() {
 
-	var tom = person{
-		name: "Tom",
-		age:  24,
-		contanct: contanct{
-			email: "tom@gmail.com",
-			phone: "+1234567899",
-		},
+	var mutex sync.Mutex // определяем мьютекс
+
+	goroutines_count := 4 // количество запускаемых горутин
+
+	wg.Add(goroutines_count)
+
+	// запускаем горутины
+	for i := 1; i <= goroutines_count; i++ {
+		go work(i, &mutex)
 	}
-	tom.email = "supertom@gmail.com"
+	// ожидаем завершения всех горутин
+	wg.Wait()
 
-	fmt.Println(tom.email) // supertom@gmail.com
-	fmt.Println(tom.phone) // +1234567899
-	fmt.Println()
-	// В данном случае структура person имеет поле contactInfo, которое представляет другую структуру contact.
-
-	/*
-		Поле contact в структуре person фактические эквивалентно свойству contact contact, то есть свойство называется contact и
-		представляет тип contact. Это позволяет нам сократить путь к полям вложенной структуры. Например, мы можем написать
-		tom.email, а не tom.contact.email. Хотя можно использовать и второй вариант.
-	*/
-	////////////////////////////////
-
-	first := node{value: 4}
-	second := node{value: 5}
-	third := node{value: 6}
-
-	first.next = &second
-	second.next = &third
-
-	var current *node = &first
-	for current != nil {
-		fmt.Println(current.value)
-		current = current.next
-	}
-	/*
-		Здесь определена структура node, которая представляет типичный узел односвязного списка. Она хранит значение в поле value
-		и ссылку на следующий узел через указатель next.
-		В функции main создаются три связанных структуры, и с помощью цикла for и вспомогательного указателя current выводятся их
-		значения.
-	*/
+	fmt.Println("The End")
 }
