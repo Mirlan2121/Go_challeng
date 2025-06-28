@@ -1,24 +1,29 @@
 package main
 
-import (
-	"fmt"
-	"os"
-)
+import "fmt"
 
-func open_file() {
+func divide_defer() {
 
-	// открываем файл
-	file, err := os.Open("./main.go")
-	// закрываем файл в конце функции
-	defer file.Close()
-	// работа с файлом
-	fmt.Println("file:", file)
-	fmt.Println("error:", err)
+	fmt.Println("divide_defer executed")
+}
+
+func main_defer() {
+
+	fmt.Println("main_defer executed")
+}
+
+func divide(x, y float64) float64 {
+	defer divide_defer()
+	if y == 0 {
+		panic("Division by zero!")
+	}
+	return x / y
 }
 
 func main() {
-
-	open_file()
+	defer main_defer()
+	fmt.Println(divide(4, 0))
+	fmt.Println("Program has been finished")
 }
 
 //Оператор defer помещает вызов переданной ему функции в стек. Когда окружающая функция возвращает управление, вызываются все
