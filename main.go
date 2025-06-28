@@ -1,63 +1,37 @@
 package main
 
-import (
-	"fmt"
-	"sync"
-)
+import "fmt"
 
-type Map_struct struct {
-	values map[int]int
-	sync.RWMutex
-}
+func factorial(n int) (int, interface{}) {
 
-var wg sync.WaitGroup
+	// если переданное число меньше 0
+	if n < 0 {
+		return 0, "Недопустимое число. Должно быть больше 0"
+	}
 
-// изменение данных
-func (map_data *Map_struct) update_map(keyval int) {
-
-	map_data.Lock() // блокировка на запись
-
-	map_data.values[keyval] = keyval * 10 // изменяем общий ресурс
-
-	map_data.Unlock() // сбрасываем блокировку на запись
-
-	wg.Done() // уведомляем, что горутина завершена
-}
-
-// чтение данных
-func (map_data *Map_struct) read_map() {
-
-	map_data.RLock() // устанавливаем блокировку на чтение
-
-	val := map_data.values // считываем данные
-
-	map_data.RUnlock() // сбрасываем блокировку на чтение
-
-	fmt.Println(val)
-	wg.Done() // уведомляем, что горутина завершена
+	result := 1
+	for i := 1; i <= n; i += 1 {
+		result *= i
+	}
+	return result, nil
 }
 
 func main() {
 
-	my_map := Map_struct{values: make(map[int]int)}
+	// Корректный параметр
+	fact, err := factorial(5)
+	fmt.Println("Factorial:", fact) // Factorial: 120
+	fmt.Println("Error:", err)      // Error: <nil>
 
-	wg.Add(2 * 5) // по пять горутин update_map и read_map
-
-	for n := 1; n <= 5; n++ {
-
-		go my_map.update_map(n)
-
-		go my_map.read_map()
-
-	}
-	wg.Wait() // ждем завершения всех горутин
+	// Некорректный параметр
+	fact, err = factorial(-5)
+	fmt.Println("Factorial:", fact) // Factorial: 0
+	fmt.Println("Error:", err)      // Error: Недопустимое число. Должно быть больше 0
 }
 
-// RLock(): используется для получения блокировки на чтение. Несколько читателей могут получить эту блокировку в одной программе. Блокировка на чтение не привязан к определенному потоку.
-
-// Unlock(): освобождает полученную одну блокировку на чтение.
-
-// Lock(): блокирует мьютекс для записи. Доступен только для одного потока за раз. Если другой поток получает блокировку для целей чтения/записи, Lock блокируется до тех пор, пока
-// блокировка не станет доступной для получения.
-
-// Unlock(): снимает блокировку на запись. При выполнении Unlock без получения блокировки мы получим ошибку во время выполнения.
+//func main() {
+//
+//	file, err := os.Open("./main.go")
+//	fmt.Println("file :", file)
+//	fmt.Println("error:", err)
+// }
