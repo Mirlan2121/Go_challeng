@@ -5,39 +5,15 @@
 
 Посмотрим на примере с делением на ноль:
 
-package main
-import "fmt"
- 
-func try_catch(){
- 
-    if r := recover(); r != nil { 
-        fmt.Println("Error:", r) 
-    }
-}
- 
-func divide(x, y float64) float64{
-    defer try_catch()
-    if y == 0{ 
-        panic("Division by zero!")
-    }
-    return x / y
-}
- 
-func main() {
-    fmt.Println(divide(4, 0))
-    fmt.Println("Program has been finished")
-}
+![image](https://github.com/user-attachments/assets/51315c04-1c75-4579-85fd-f785979c267e)
+
 Эта программа на Go демонстрирует механизм обработки ошибок, похожий на try-catch в других языках программирования, но реализованный с использованием встроенных функций Go: defer, panic и recover.
 
 Прежде всего для перехвата ошибки, которая сгенерирована оператором panic() определена функция try_catch()
 
 
-func try_catch(){
- 
-    if r := recover(); r != nil { 
-        fmt.Println("Error:", r) 
-    }
-}
+![image](https://github.com/user-attachments/assets/254388ed-69f9-4788-8b2c-cea6218ddebb)
+
 Вначале проверяем был ли вызов panic:
 
 1
@@ -53,13 +29,8 @@ fmt.Println("Error:", r)
 Далее идет функция divide(), в которой собственно и генерируется ошибка при делении на ноль.
 
 
-func divide(x, y float64) float64{
-    defer try_catch()
-    if y == 0{ 
-        panic("Division by zero!")
-    }
-    return x / y
-}
+![image](https://github.com/user-attachments/assets/88422d6a-248e-4729-87a3-fd5ee93947ce)
+
 Для перехвата ошибки вначале идет вызов defer try_catch(). То есть функция try_catch будет вызвана непосредственно перед тем, как функция divide завершит свое выполнение, 
 независимо от того, произошла ли ошибка.
 
