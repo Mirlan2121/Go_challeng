@@ -1,74 +1,71 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-// Структура контакт
-type contanct struct {
-	email string
-	phone string
-}
+// Запись в файл
+// Для записи текстовой информации в файл можно применять метод WriteString() объекта os.File, который заносит в файл строку:
 
-// Сама структура персон
-type person struct {
-	name string // Поля имени
-	age  int    // Поля возроста
-	contanct
-}
-
-// Хранения ссылки на структуру того же типа
-type node struct {
-	value int
-	next  *node
-}
-
-func printNodeValue(n *node) {
-	fmt.Println(n.value)
-	if n.next != nil {
-		printNodeValue(n.next)
-	}
-}
-
-// Вложенные структуры
+/*
 func main() {
+	text := "Hello Gold!"
+	file, err := os.Create("hello.txt")
 
-	var tom = person{
-		name: "Tom",
-		age:  24,
-		contanct: contanct{
-			email: "tom@gmail.com",
-			phone: "+1234567899",
-		},
+	if err != nil {
+		fmt.Println("Unable to create file:", err)
+		os.Exit(1)
 	}
-	tom.email = "supertom@gmail.com"
+	defer file.Close()
+	file.WriteString(text)
 
-	fmt.Println(tom.email) // supertom@gmail.com
-	fmt.Println(tom.phone) // +1234567899
-	fmt.Println()
-	// В данном случае структура person имеет поле contactInfo, которое представляет другую структуру contact.
-
-	/*
-		Поле contact в структуре person фактические эквивалентно свойству contact contact, то есть свойство называется contact и
-		представляет тип contact. Это позволяет нам сократить путь к полям вложенной структуры. Например, мы можем написать
-		tom.email, а не tom.contact.email. Хотя можно использовать и второй вариант.
-	*/
-	////////////////////////////////
-
-	first := node{value: 4}
-	second := node{value: 5}
-	third := node{value: 6}
-
-	first.next = &second
-	second.next = &third
-
-	var current *node = &first
-	for current != nil {
-		fmt.Println(current.value)
-		current = current.next
-	}
-	/*
-		Здесь определена структура node, которая представляет типичный узел односвязного списка. Она хранит значение в поле value
-		и ссылку на следующий узел через указатель next.
-		В функции main создаются три связанных структуры, и с помощью цикла for и вспомогательного указателя current выводятся их
-		значения.
-	*/
+	fmt.Println("Done.")
 }
+*/
+
+// В данном случае создается файл hello.txt, в который записывается строка "Hello Gold!".
+
+// Для записи нетекстовой бинарной информации в виде набора байт применяется метод Write() (реализация интерфейса io.Writer):
+
+// func main() {
+// 	data := []byte("Hello Bold!")
+// 	file, err := os.Create("hello.bin")
+// 	if err != nil {
+// 		fmt.Println("Unable to create file:", err)
+// 		os.Exit(1)
+// 	}
+// 	defer file.Close()
+// 	file.Write(data)
+//
+// 	fmt.Println("Done.")
+// }
+
+// Чтение из файла
+// Поскольку тип io.File реализует интерфейс io.Reader, то для чтения из файла мы можем использовать метод Read().
+// Этот метод позволяет получить содержимое файла в виде набора байт:
+
+func main() {
+	file, err := os.Open("hello.txt")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	data := make([]byte, 64)
+
+	for {
+		n, err := file.Read(data)
+		if err == io.EOF { // если конец файла
+			break // выходим из цикла
+		}
+		fmt.Print(string(data[:n]))
+	}
+}
+
+// Для считывания данных определяется срез из 64 байтов. В бесконечном цикле содержимое файла считывается в срез, а
+// когда будет достигнут конец файла, то есть мы получим ошибку io.EOF, то произойдет выход из цикла. Ну и поскольку
+// анные представляют срез байтов, хотя файл hello.txt хранит текстовую информацию, то для вывода текста на консоль
+// преобразуем срез байтов в строку: string(data[:n]).
