@@ -1,23 +1,32 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
-func try_catch() {
+type phoneReader string
 
-	if r := recover(); r != nil {
-		fmt.Println("Error:", r)
+func (ph phoneReader) Read(p []byte) (int, error) {
+	count := 0
+	for i := 0; i < len(ph); i++ {
+		if ph[i] >= '0' && ph[i] <= '9' {
+			p[count] = ph[i]
+			count++
+		}
 	}
-}
-
-func divide(x, y float64) float64 {
-	defer try_catch()
-	if y == 0 {
-		panic("Division by zero!")
-	}
-	return x / y
+	return count, io.EOF
 }
 
 func main() {
-	fmt.Println(divide(4, 0))
-	fmt.Println("Program has been finished")
+	phone1 := phoneReader("+1(234)567 9010")
+	phone2 := phoneReader("+2-345-678-12-35")
+
+	buffer := make([]byte, len(phone1))
+	phone1.Read(buffer)
+	fmt.Println(string(buffer)) // 12345679010
+
+	buffer = make([]byte, len(phone2))
+	phone2.Read(buffer)
+	fmt.Println(string(buffer)) // 23456781235
 }
