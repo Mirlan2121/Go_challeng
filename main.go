@@ -1,3 +1,4 @@
+// Стандартные потоки ввода-вывода и io.Copy
 package main
 
 import (
@@ -6,66 +7,41 @@ import (
 	"os"
 )
 
-// Запись в файл
-// Для записи текстовой информации в файл можно применять метод WriteString() объекта os.File, который заносит в файл строку:
-
 /*
-func main() {
-	text := "Hello Gold!"
-	file, err := os.Create("hello.txt")
-
-	if err != nil {
-		fmt.Println("Unable to create file:", err)
-		os.Exit(1)
-	}
-	defer file.Close()
-	file.WriteString(text)
-
-	fmt.Println("Done.")
-}
+	И при выводе из файла текстовой информации на консоль гораздо проще передать данные из файлового потока в os.Stdout,
+	через выводить данные отдельными порциями:
 */
 
-// В данном случае создается файл hello.txt, в который записывается строка "Hello Gold!".
-
-// Для записи нетекстовой бинарной информации в виде набора байт применяется метод Write() (реализация интерфейса io.Writer):
-
-// func main() {
-// 	data := []byte("Hello Bold!")
-// 	file, err := os.Create("hello.bin")
-// 	if err != nil {
-// 		fmt.Println("Unable to create file:", err)
-// 		os.Exit(1)
-// 	}
-// 	defer file.Close()
-// 	file.Write(data)
+//	func main() {
+//		file, err := os.Open("hello.txt")
+//		if err != nil {
+//			fmt.Println(err)
+//			os.Exit(1)
+//		}
+//		defer file.Close()
 //
-// 	fmt.Println("Done.")
-// }
+//		io.Copy(os.Stdout, file)
+//	}
 
-// Чтение из файла
-// Поскольку тип io.File реализует интерфейс io.Reader, то для чтения из файла мы можем использовать метод Read().
-// Этот метод позволяет получить содержимое файла в виде набора байт:
+// В качестве io.Reader можно использовать свои кастомные объекты, которые реализуют данный интерфейс. Например:
+type phoneReader string
 
-func main() {
-	file, err := os.Open("hello.txt")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer file.Close()
-
-	data := make([]byte, 64)
-
-	for {
-		n, err := file.Read(data)
-		if err == io.EOF { // если конец файла
-			break // выходим из цикла
+func (p phoneReader) Read(bs []byte) (int, error) {
+	count := 0
+	for i := 0; i < len(p); i++ {
+		if p[i] >= '0' && p[i] <= '9' {
+			bs[count] = p[i]
+			count++
 		}
-		fmt.Print(string(data[:n]))
 	}
+	return count, io.EOF
 }
 
-// Для считывания данных определяется срез из 64 байтов. В бесконечном цикле содержимое файла считывается в срез, а
-// когда будет достигнут конец файла, то есть мы получим ошибку io.EOF, то произойдет выход из цикла. Ну и поскольку
-// анные представляют срез байтов, хотя файл hello.txt хранит текстовую информацию, то для вывода текста на консоль
-// преобразуем срез байтов в строку: string(data[:n]).
+func main() {
+	phone1 := phoneReader("+1(234)567 90-10")
+	io.Copy(os.Stdout, phone1)
+	fmt.Println()
+}
+
+// В данном случае в качестве интерфейса io.Reader передается объект phoneReader, который считывает цифровые символы
+// из номера телефона.
