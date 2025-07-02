@@ -1,74 +1,66 @@
+// Форматируемый ввод
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-// Структура контакт
-type contanct struct {
-	email string
-	phone string
-}
-
-// Сама структура персон
 type person struct {
-	name string // Поля имени
-	age  int    // Поля возроста
-	contanct
+	name   string
+	age    int32
+	weight float64
 }
 
-// Хранения ссылки на структуру того же типа
-type node struct {
-	value int
-	next  *node
-}
-
-func printNodeValue(n *node) {
-	fmt.Println(n.value)
-	if n.next != nil {
-		printNodeValue(n.next)
-	}
-}
-
-// Вложенные структуры
 func main() {
+	filename := "people.dat"
+	writeData(filename)
+	readData(filename)
+}
 
-	var tom = person{
-		name: "Tom",
-		age:  24,
-		contanct: contanct{
-			email: "tom@gmail.com",
-			phone: "+1234567899",
-		},
+func writeData(filename string) {
+	// начальные данные
+	var people = []person{
+		{"Tom", 24, 68.5},
+		{"Bob", 25, 64.2},
+		{"Sam", 27, 73.6},
 	}
-	tom.email = "supertom@gmail.com"
 
-	fmt.Println(tom.email) // supertom@gmail.com
-	fmt.Println(tom.phone) // +1234567899
-	fmt.Println()
-	// В данном случае структура person имеет поле contactInfo, которое представляет другую структуру contact.
-
-	/*
-		Поле contact в структуре person фактические эквивалентно свойству contact contact, то есть свойство называется contact и
-		представляет тип contact. Это позволяет нам сократить путь к полям вложенной структуры. Например, мы можем написать
-		tom.email, а не tom.contact.email. Хотя можно использовать и второй вариант.
-	*/
-	////////////////////////////////
-
-	first := node{value: 4}
-	second := node{value: 5}
-	third := node{value: 6}
-
-	first.next = &second
-	second.next = &third
-
-	var current *node = &first
-	for current != nil {
-		fmt.Println(current.value)
-		current = current.next
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
-	/*
-		Здесь определена структура node, которая представляет типичный узел односвязного списка. Она хранит значение в поле value
-		и ссылку на следующий узел через указатель next.
-		В функции main создаются три связанных структуры, и с помощью цикла for и вспомогательного указателя current выводятся их
-		значения.
-	*/
+	defer file.Close()
+
+	for _, p := range people {
+		fmt.Fprintf(file, "%s %d %.2f\n", p.name, p.age, p.weight)
+	}
+}
+func readData(filename string) {
+
+	var name string
+	var age int
+	var weight float64
+
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	for {
+		_, err = fmt.Fscanf(file, "%s %d %f\n", &name, &age, &weight)
+		if err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+		}
+		fmt.Printf("%-8s %-8d %-8.2f\n", name, age, weight)
+	}
 }
