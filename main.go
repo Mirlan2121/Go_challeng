@@ -1,47 +1,22 @@
-// Стандартные потоки ввода-вывода и io.Copy
+// Функции Fprint и Fprintln
 package main
 
-import (
-	"fmt"
-	"io"
-	"os"
-)
+import "fmt"
 
-/*
-	И при выводе из файла текстовой информации на консоль гораздо проще передать данные из файлового потока в os.Stdout,
-	через выводить данные отдельными порциями:
-*/
-
-//	func main() {
-//		file, err := os.Open("hello.txt")
-//		if err != nil {
-//			fmt.Println(err)
-//			os.Exit(1)
-//		}
-//		defer file.Close()
-//
-//		io.Copy(os.Stdout, file)
-//	}
-
-// В качестве io.Reader можно использовать свои кастомные объекты, которые реализуют данный интерфейс. Например:
-type phoneReader string
-
-func (p phoneReader) Read(bs []byte) (int, error) {
-	count := 0
-	for i := 0; i < len(p); i++ {
-		if p[i] >= '0' && p[i] <= '9' {
-			bs[count] = p[i]
-			count++
-		}
-	}
-	return count, io.EOF
+type person struct {
+	name   string
+	age    int32
+	weight float64
 }
 
 func main() {
-	phone1 := phoneReader("+1(234)567 90-10")
-	io.Copy(os.Stdout, phone1)
-	fmt.Println()
+	tom := person{
+		name:   "Tom",
+		age:    24,
+		weight: 68.5,
+	}
+	fmt.Printf("%-10s %-10d %-10.3f\n",
+		tom.name, tom.age, tom.weight)
+	fmt.Print("Hello ")
+	fmt.Println("cold!")
 }
-
-// В данном случае в качестве интерфейса io.Reader передается объект phoneReader, который считывает цифровые символы
-// из номера телефона.
