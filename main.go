@@ -1,74 +1,47 @@
+// Стандартные потоки ввода-вывода и io.Copy
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-// Структура контакт
-type contanct struct {
-	email string
-	phone string
-}
+/*
+	И при выводе из файла текстовой информации на консоль гораздо проще передать данные из файлового потока в os.Stdout,
+	через выводить данные отдельными порциями:
+*/
 
-// Сама структура персон
-type person struct {
-	name string // Поля имени
-	age  int    // Поля возроста
-	contanct
-}
+//	func main() {
+//		file, err := os.Open("hello.txt")
+//		if err != nil {
+//			fmt.Println(err)
+//			os.Exit(1)
+//		}
+//		defer file.Close()
+//
+//		io.Copy(os.Stdout, file)
+//	}
 
-// Хранения ссылки на структуру того же типа
-type node struct {
-	value int
-	next  *node
-}
+// В качестве io.Reader можно использовать свои кастомные объекты, которые реализуют данный интерфейс. Например:
+type phoneReader string
 
-func printNodeValue(n *node) {
-	fmt.Println(n.value)
-	if n.next != nil {
-		printNodeValue(n.next)
+func (p phoneReader) Read(bs []byte) (int, error) {
+	count := 0
+	for i := 0; i < len(p); i++ {
+		if p[i] >= '0' && p[i] <= '9' {
+			bs[count] = p[i]
+			count++
+		}
 	}
+	return count, io.EOF
 }
 
-// Вложенные структуры
 func main() {
-
-	var tom = person{
-		name: "Tom",
-		age:  24,
-		contanct: contanct{
-			email: "tom@gmail.com",
-			phone: "+1234567899",
-		},
-	}
-	tom.email = "supertom@gmail.com"
-
-	fmt.Println(tom.email) // supertom@gmail.com
-	fmt.Println(tom.phone) // +1234567899
+	phone1 := phoneReader("+1(234)567 90-10")
+	io.Copy(os.Stdout, phone1)
 	fmt.Println()
-	// В данном случае структура person имеет поле contactInfo, которое представляет другую структуру contact.
-
-	/*
-		Поле contact в структуре person фактические эквивалентно свойству contact contact, то есть свойство называется contact и
-		представляет тип contact. Это позволяет нам сократить путь к полям вложенной структуры. Например, мы можем написать
-		tom.email, а не tom.contact.email. Хотя можно использовать и второй вариант.
-	*/
-	////////////////////////////////
-
-	first := node{value: 4}
-	second := node{value: 5}
-	third := node{value: 6}
-
-	first.next = &second
-	second.next = &third
-
-	var current *node = &first
-	for current != nil {
-		fmt.Println(current.value)
-		current = current.next
-	}
-	/*
-		Здесь определена структура node, которая представляет типичный узел односвязного списка. Она хранит значение в поле value
-		и ссылку на следующий узел через указатель next.
-		В функции main создаются три связанных структуры, и с помощью цикла for и вспомогательного указателя current выводятся их
-		значения.
-	*/
 }
+
+// В данном случае в качестве интерфейса io.Reader передается объект phoneReader, который считывает цифровые символы
+// из номера телефона.
