@@ -1,19 +1,32 @@
-// Чтение с консоли
+// Буферизированный ввод-вывод
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
+	"os"
 )
 
 func main() {
-	var name string
-	var age int
-	fmt.Print("Введите имя и возраст: ")
-	fmt.Scan(&name, &age)
-	fmt.Println(name, age)
+	file, err := os.Open("some.data")
+	if err != nil {
+		fmt.Println("Unable to open file:", err)
+		return
+	}
+	defer file.Close()
 
-	// альтернативный вариант
-	//fmt.Println("Введите имя и возраст:")
-	//fmt.Scanf("%s %d", &name, &age)
-	//fmt.Println(name, age)
+	reader := bufio.NewReader(file)
+	for {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				fmt.Println(err)
+				return
+			}
+		}
+		fmt.Print(line)
+	}
 }
