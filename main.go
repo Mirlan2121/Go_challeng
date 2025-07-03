@@ -1,32 +1,28 @@
-// Буферизированный ввод-вывод
+// Сетевое программирование
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io"
+	"net"
 	"os"
 )
 
 func main() {
-	file, err := os.Open("some.data")
+	httpRequest := "GET / HTTP/1.1\n" +
+		"Host: golang.org\n\n"
+	conn, err := net.Dial("tcp", "golang.org:80")
 	if err != nil {
-		fmt.Println("Unable to open file:", err)
+		fmt.Println(err)
 		return
 	}
-	defer file.Close()
+	defer conn.Close()
 
-	reader := bufio.NewReader(file)
-	for {
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			if err == io.EOF {
-				break
-			} else {
-				fmt.Println(err)
-				return
-			}
-		}
-		fmt.Print(line)
+	if _, err = conn.Write([]byte(httpRequest)); err != nil {
+		fmt.Println(err)
+		return
 	}
+
+	io.Copy(os.Stdout, conn)
+	fmt.Println("Done")
 }
