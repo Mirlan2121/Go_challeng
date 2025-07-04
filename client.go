@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"time"
 )
 
 func main() {
@@ -28,12 +29,16 @@ func main() {
 		}
 		// получем ответ
 		fmt.Print("Перевод:")
-		buff := make([]byte, 1024)
-		n, err := conn.Read(buff)
-		if err != nil {
-			break
+		conn.SetReadDeadline(time.Now().Add(time.Second * 5))
+		for {
+			buff := make([]byte, 1024)
+			n, err := conn.Read(buff)
+			if err != nil {
+				break
+			}
+			fmt.Print(string(buff[0:n]))
+			conn.SetReadDeadline(time.Now().Add(time.Millisecond * 700))
 		}
-		fmt.Print(string(buff[0:n]))
 		fmt.Println()
 	}
 }

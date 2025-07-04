@@ -1,4 +1,3 @@
-// Взаимодействие клиента и сервера
 package main
 
 import (
@@ -11,6 +10,7 @@ var dict = map[string]string{
 	"green":  "зеленый",
 	"blue":   "синий",
 	"yellow": "желтый",
+	"Miki":   "Мики",
 }
 
 func main() {
